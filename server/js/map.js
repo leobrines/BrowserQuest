@@ -12,17 +12,14 @@ module.exports = Map = cls.Class.extend({
     
     	this.isLoaded = false;
     
-    	path.exists(filepath, function(exists) {
-            if(!exists) {
+    	fs.readFile(filepath, function(err, file) {
+            if(err) {
                 log.error(filepath + " doesn't exist.");
                 return;
             }
-        
-            fs.readFile(filepath, function(err, file) {
-                var json = JSON.parse(file.toString());
+            var json = JSON.parse(file.toString());
             
-                self.initMap(json);
-            });
+            self.initMap(json);
         });
     },
 

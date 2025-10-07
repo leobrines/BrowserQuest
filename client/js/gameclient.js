@@ -1,5 +1,5 @@
 
-define(['player', 'entityfactory', 'lib/bison'], function(Player, EntityFactory, BISON) {
+define(['player', 'entityfactory'], function(Player, EntityFactory) {
 
     var GameClient = Class.extend({
         init: function(host, port) {
@@ -32,7 +32,6 @@ define(['player', 'entityfactory', 'lib/bison'], function(Player, EntityFactory,
             this.handlers[Types.Messages.HP] = this.receiveHitPoints;
             this.handlers[Types.Messages.BLINK] = this.receiveBlink;
         
-            this.useBison = false;
             this.enable();
         },
     
@@ -107,27 +106,19 @@ define(['player', 'entityfactory', 'lib/bison'], function(Player, EntityFactory,
             }
         },
 
-        sendMessage: function(json) {
-            var data;
-            if(this.connection.readyState === 1) {
-                if(this.useBison) {
-                    data = BISON.encode(json);
-                } else {
-                    data = JSON.stringify(json);
-                }
-                this.connection.send(data);
-            }
-        },
+    sendMessage: function(json) {
+        var data;
+        if(this.connection.readyState === 1) {
+            data = JSON.stringify(json);
+            this.connection.send(data);
+        }
+    },
 
-        receiveMessage: function(message) {
-            var data, action;
+    receiveMessage: function(message) {
+        var data, action;
         
-            if(this.isListening) {
-                if(this.useBison) {
-                    data = BISON.decode(message);
-                } else {
-                    data = JSON.parse(message);
-                }
+        if(this.isListening) {
+            data = JSON.parse(message);
 
                 log.debug("data: " + message);
 
