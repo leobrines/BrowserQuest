@@ -45,7 +45,7 @@ define(['player', 'entityfactory'], function(Player, EntityFactory) {
         
         connect: function(dispatcherMode) {
             var protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
-            var url = protocol + this.host + ":" + this.port + "/",
+            var url = protocol + this.host + ":" + this.port + "/ws",
                 self = this;
             
             log.info("Trying to connect to server : "+url);
