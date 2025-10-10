@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  game-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    container_name: browserquest-server
+    env_file:
+      - .env
+    ports:
+      - "${SERVER_PORT}:9000"
+    volumes:
+      - ./server:/app/server
+      - ./shared:/app/shared
+    environment:
+      - NODE_ENV=production
+      - SERVER_CONFIG=${SERVER_CONFIG}
+    restart: unless-stopped
+    networks:
+      - browserquest-network
+
+  web-client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    container_name: browserquest-client
+    env_file:
+      - .env
+    ports:
+      - "${CLIENT_PORT}:8080"
+    environment:
+      - SERVER_PORT=${SERVER_PORT:-8000}
+      - CLIENT_CONFIG=${CLIENT_CONFIG}
+    depends_on:
+      - game-server
+    restart: unless-stopped
+    networks:
+      - browserquest-network
+
+networks:
+  browserquest-network:
+    driver: bridge
+
