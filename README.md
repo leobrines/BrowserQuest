@@ -7,13 +7,18 @@ BrowserQuest is a HTML5/JavaScript multiplayer game experiment.
 Requirements
 ------------
 
+**Option A - Docker (Recommended)**:
+- Docker and Docker Compose
+- Modern web browser (Chrome, Firefox, Safari, or Edge)
+
+**Option B - Manual Setup**:
 - **Node.js 20.x LTS** or later
 - Modern web browser (Chrome, Firefox, Safari, or Edge)
 - Python 3 (for serving client files) OR Node.js http-server package
 
 
-Quick Start
------------
+Quick Start (Manual Setup)
+--------------------------
 
 ### 1. Install Dependencies
 
@@ -69,13 +74,37 @@ http://localhost:8080
 Enter a username and click "Play" to start!
 
 
+Docker Deployment (Recommended)
+-------------------------------
+
+```bash
+cp .env.example .env
+docker-compose up -d --build
+open http://localhost
+```
+
+Configure via `.env` file:
+```env
+CLIENT_PORT=80              # Web client port
+SERVER_PORT=8000            # WebSocket server port
+SERVER_CONFIG='{"port":8080,"debug_level":"info","nb_players_per_world":200,"nb_worlds":5,"map_filepath":"./server/maps/world_server.json","metrics_enabled":false}'
+CLIENT_CONFIG='{"host":"","port":8000}'
+```
+
+**Server options**: `port` (internal), `debug_level` (error/info/debug), `nb_players_per_world`, `nb_worlds`, `map_filepath`, `metrics_enabled`
+
+**Client options**: `host` (leave empty for auto-detect), `port` (must match SERVER_PORT)
+
+**Production**: Point DNS to server, ensure ports are accessible, set appropriate player/world limits
+
+
 Multiplayer Testing
 -------------------
 
 To test multiplayer functionality:
 1. Keep the first browser window open with a logged-in player
 2. Open a second browser window/tab
-3. Navigate to `http://localhost:8080`
+3. Navigate to `http://localhost:8080` (or `http://localhost` if using Docker)
 4. Create a second character with a different username
 5. Both players should see each other and interact in real-time
 
@@ -85,19 +114,18 @@ Troubleshooting
 
 **Server won't start**:
 - Verify Node.js 20+ is installed: `node --version`
-- Check that port 8000 is not already in use
+- Check that port is not in use
 - Ensure `npm install` completed successfully
+- Docker: Check logs with `docker-compose logs game-server`
 
 **Client won't connect**:
-- Ensure the game server is running on port 8000
-- Verify the client is served via HTTP (not file://)
-- Check browser console (F12) for WebSocket connection errors
-- Verify `client/config/config_local.json` points to correct host/port
+- Ensure game server is running
+- Verify client is served via HTTP (not file://)
+- Check browser console (F12) for errors
+- Docker: Verify CLIENT_CONFIG port matches SERVER_PORT
 
-**Assets not loading**:
-- Ensure HTTP server is running from the `client/` directory
-- Check browser console for 404 errors
-- Verify file permissions allow reading client files
+**Config not updating (Docker)**:
+- Run `docker-compose down && docker-compose up -d --build`
 
 
 Documentation

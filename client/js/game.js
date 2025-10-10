@@ -717,7 +717,7 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
             this.client = new GameClient(this.host, this.port);
             
             //>>excludeStart("prodHost", pragmas.prodHost);
-            var config = this.app.config.local || this.app.config.dev;
+            var config = this.app.config.build || this.app.config.dev || this.app.config.local;
             if(config) {
                 this.client.connect(config.dispatcher); // false if the client connects directly to a game server
                 connecting = true;

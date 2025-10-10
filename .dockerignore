@@ -1,0 +1,43 @@
+# Node modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+.env*
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+.DS_Store
+
+# Documentation and specs
+README.md
+specs/
+*.md
+
+# Build tools and configs (not needed in container)
+.dockerignore
+docker-compose.yml
+Dockerfile*
+
+# Logs
+logs/
+*.log
+
+# Local config files
+client/config/config_local.json
+server/config_local.json
+
+# Nginx config (will be copied separately)
+nginx/browserquest.dozink.com
+

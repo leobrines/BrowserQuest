@@ -90,7 +90,10 @@ define(['jquery', 'storage'], function($, Storage) {
                     config = this.config;
 
                 //>>includeStart("devHost", pragmas.devHost);
-                if(config.local) {
+                if (config.build) {
+                    log.debug("Starting game with build config.");
+                    this.game.setServerOptions(config.build.host, config.build.port, username);
+                } else if (config.local) {
                     log.debug("Starting game with local dev config.");
                     this.game.setServerOptions(config.local.host, config.local.port, username);
                 } else {

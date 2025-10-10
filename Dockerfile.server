@@ -1,0 +1,23 @@
+FROM node:20-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install --production
+
+# Copy server code and shared directory
+COPY server/ ./server/
+COPY shared/ ./shared/
+
+# Expose internal port
+EXPOSE 8080
+
+# Run the game server
+# Configuration MUST be provided via SERVER_CONFIG environment variable
+# Falls back to server/config.json or server/config_local.json if not set
+CMD ["node", "server/js/main.js"]
+

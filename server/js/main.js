@@ -130,15 +130,28 @@ process.argv.forEach(function (val, index, array) {
     }
 });
 
-getConfigFile(defaultConfigPath, function(defaultConfig) {
-    getConfigFile(customConfigPath, function(localConfig) {
-        if(localConfig) {
-            main(localConfig);
-        } else if(defaultConfig) {
-            main(defaultConfig);
-        } else {
-            console.error("Server cannot start without any configuration file.");
-            process.exit(1);
-        }
+// Check if configuration is provided via environment variable
+if(process.env.SERVER_CONFIG) {
+    try {
+        var envConfig = JSON.parse(process.env.SERVER_CONFIG);
+        console.log("Using configuration from SERVER_CONFIG environment variable");
+        main(envConfig);
+    } catch(e) {
+        console.error("Failed to parse SERVER_CONFIG environment variable:", e.message);
+        process.exit(1);
+    }
+} else {
+    // Fall back to file-based configuration
+    getConfigFile(defaultConfigPath, function(defaultConfig) {
+        getConfigFile(customConfigPath, function(localConfig) {
+            if(localConfig) {
+                main(localConfig);
+            } else if(defaultConfig) {
+                main(defaultConfig);
+            } else {
+                console.error("Server cannot start without any configuration file.");
+                process.exit(1);
+            }
+        });
     });
-});
+}
